@@ -1,10 +1,20 @@
 'use client';
 
-import clsx from 'clsx';
-import { CreditCard, Laptop, Phone, Plus, Shield } from 'lucide-react';
+import { CreditCard, Info, Laptop, Phone, Plus, Shield } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import React from 'react';
 
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -12,172 +22,193 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-
-type Color = (typeof colorList)[number];
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
 
 export default function ComponentPage() {
-  const [mode, setMode] = React.useState<'dark' | 'light'>('light');
-  const [color, setColor] = React.useState<Color>('sky');
-  function toggleMode() {
-    return mode === 'dark' ? setMode('light') : setMode('dark');
-  }
-
-  const textColor = mode === 'dark' ? 'text-gray-300' : 'text-gray-600';
+  const { theme, setTheme } = useTheme();
 
   return (
-    <main>
-      <section
-        className={clsx(mode === 'dark' ? 'bg-dark' : 'bg-white', color)}
-      >
-        <div
-          className={clsx(
-            'layout min-h-screen py-20',
-            mode === 'dark' ? 'text-white' : 'text-black'
-          )}
-        >
-          <h1>Built-in Components</h1>
-          <div className='mt-8 flex flex-wrap gap-2'>
-            <Button
-              onClick={toggleMode}
-              variant={mode === 'dark' ? 'default' : 'secondary'}
-            >
-              Set to {mode === 'dark' ? 'light' : 'dark'}
-            </Button>
+    <main className='min-h-screen bg-background text-foreground'>
+      <div className='container mx-auto py-10'>
+        <div className='max-w-4xl mx-auto'>
+          <div className='flex justify-between items-center mb-8'>
+            <div>
+              <h1 className='text-4xl font-bold'>Shadcn UI Components</h1>
+              <p className='text-lg text-muted-foreground mt-2'>
+                A collection of reusable components built with Radix UI and
+                Tailwind CSS.
+              </p>
+            </div>
           </div>
 
-          <ol className='mt-8 space-y-6'>
-            <li className='space-y-2'>
-              <h2 className='text-lg md:text-xl'>Customize Colors</h2>
-              <p className={clsx('!mt-1 text-sm', textColor)}>
-                You can change primary color to any Tailwind CSS colors. See
-                globals.css to change your color.
-              </p>
-              <div className='flex flex-wrap gap-2'>
-                <Select
-                  value={color}
-                  onValueChange={(value) => setColor(value as Color)}
+          <Tabs defaultValue='buttons' className='space-y-4'>
+            <TabsList>
+              <TabsTrigger value='buttons'>Buttons</TabsTrigger>
+              <TabsTrigger value='inputs'>Inputs</TabsTrigger>
+              <TabsTrigger value='alerts'>Alerts</TabsTrigger>
+              <TabsTrigger value='badges'>Badges</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value='buttons' className='space-y-4'>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Buttons</CardTitle>
+                  <CardDescription>
+                    A collection of button variants and sizes with different
+                    styles.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className='space-y-4'>
+                  <div className='space-x-2'>
+                    <Button>Primary Button</Button>
+                    <Button variant='secondary'>Secondary Button</Button>
+                    <Button variant='outline'>Outline Button</Button>
+                    <Button variant='ghost'>Ghost Button</Button>
+                    <Button variant='destructive'>Destructive</Button>
+                  </div>
+
+                  <div className='space-x-2'>
+                    <Button size='lg'>Large</Button>
+                    <Button>Default</Button>
+                    <Button size='sm'>Small</Button>
+                  </div>
+
+                  <div className='space-x-2'>
+                    <Button>
+                      <Plus className='mr-2 h-4 w-4' /> With Icon
+                    </Button>
+                    <Button variant='secondary'>
+                      <Laptop className='mr-2 h-4 w-4' /> With Icon
+                    </Button>
+                    <Button variant='outline'>
+                      <Phone className='mr-2 h-4 w-4' /> With Icon
+                    </Button>
+                  </div>
+
+                  <div className='space-x-2'>
+                    <Button disabled>
+                      <Shield className='mr-2 h-4 w-4' /> Disabled
+                    </Button>
+                    <Button disabled variant='secondary'>
+                      <CreditCard className='mr-2 h-4 w-4' /> Disabled
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value='inputs' className='space-y-4'>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Input Fields</CardTitle>
+                  <CardDescription>
+                    Various input field components for forms and data entry.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className='space-y-4'>
+                  <div className='grid gap-4'>
+                    <Input type='email' placeholder='Email' />
+                    <Input type='password' placeholder='Password' />
+                    <Input type='text' placeholder='Disabled input' disabled />
+                    <Textarea placeholder='Type your message here.' />
+                    <Select>
+                      <SelectTrigger>
+                        <SelectValue placeholder='Select an option' />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value='option1'>Option 1</SelectItem>
+                        <SelectItem value='option2'>Option 2</SelectItem>
+                        <SelectItem value='option3'>Option 3</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value='alerts' className='space-y-4'>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Alerts</CardTitle>
+                  <CardDescription>
+                    Display important messages and notifications.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className='space-y-4'>
+                  <Alert>
+                    <Info className='h-4 w-4' />
+                    <AlertTitle>Default Alert</AlertTitle>
+                    <AlertDescription>
+                      This is a default alert message.
+                    </AlertDescription>
+                  </Alert>
+                  <Alert variant='destructive'>
+                    <Info className='h-4 w-4' />
+                    <AlertTitle>Destructive Alert</AlertTitle>
+                    <AlertDescription>
+                      This is a destructive alert message.
+                    </AlertDescription>
+                  </Alert>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value='badges' className='space-y-4'>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Badges</CardTitle>
+                  <CardDescription>
+                    Status indicators and labels.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className='space-y-4'>
+                  <div className='flex gap-2 flex-wrap'>
+                    <Badge>Default</Badge>
+                    <Badge variant='secondary'>Secondary</Badge>
+                    <Badge variant='outline'>Outline</Badge>
+                    <Badge variant='destructive'>Destructive</Badge>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+
+          <Card className='mt-8'>
+            <CardHeader>
+              <CardTitle>Theme Settings</CardTitle>
+              <CardDescription>
+                Customize the appearance of the components.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className='flex gap-2'>
+                <Button
+                  variant='outline'
+                  onClick={() => setTheme('light')}
+                  className={theme === 'light' ? 'border-primary' : ''}
                 >
-                  <SelectTrigger className='w-[180px]'>
-                    <SelectValue placeholder='Select a color' />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {colorList.map((c) => (
-                      <SelectItem key={c} value={c}>
-                        {c}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Button asChild variant='outline'>
-                  <a href='https://github.com/theodorusclarence/ts-nextjs-tailwind-starter/blob/main/src/styles/colors.css'>
-                    Check list of colors
-                  </a>
+                  Light
+                </Button>
+                <Button
+                  variant='outline'
+                  onClick={() => setTheme('dark')}
+                  className={theme === 'dark' ? 'border-primary' : ''}
+                >
+                  Dark
+                </Button>
+                <Button
+                  variant='outline'
+                  onClick={() => setTheme('system')}
+                  className={theme === 'system' ? 'border-primary' : ''}
+                >
+                  System
                 </Button>
               </div>
-              <div className='flex flex-wrap gap-2 text-xs font-medium'>
-                <div className='bg-primary-50 flex h-10 w-10 items-center justify-center rounded text-black'>
-                  50
-                </div>
-                <div className='bg-primary-100 flex h-10 w-10 items-center justify-center rounded text-black'>
-                  100
-                </div>
-                <div className='bg-primary-200 flex h-10 w-10 items-center justify-center rounded text-black'>
-                  200
-                </div>
-                <div className='bg-primary-300 flex h-10 w-10 items-center justify-center rounded text-black'>
-                  300
-                </div>
-                <div className='bg-primary-400 flex h-10 w-10 items-center justify-center rounded text-black'>
-                  400
-                </div>
-                <div className='bg-primary-500 flex h-10 w-10 items-center justify-center rounded text-black'>
-                  500
-                </div>
-                <div className='bg-primary-600 flex h-10 w-10 items-center justify-center rounded text-black'>
-                  600
-                </div>
-                <div className='bg-primary-700 flex h-10 w-10 items-center justify-center rounded text-black'>
-                  700
-                </div>
-                <div className='bg-primary-800 flex h-10 w-10 items-center justify-center rounded text-black'>
-                  800
-                </div>
-                <div className='bg-primary-900 flex h-10 w-10 items-center justify-center rounded text-black'>
-                  900
-                </div>
-                <div className='bg-primary-950 flex h-10 w-10 items-center justify-center rounded text-black'>
-                  950
-                </div>
-              </div>
-            </li>
-            <li className='space-y-2'>
-              <h2 className='text-lg md:text-xl'>Buttons</h2>
-              <p className={clsx('!mt-1 text-sm', textColor)}>
-                Buttons with various styles.
-              </p>
-              <div className='space-x-2'>
-                <Button>Primary Button</Button>
-                <Button variant='secondary'>Secondary Button</Button>
-                <Button variant='outline'>Outline Button</Button>
-                <Button variant='ghost'>Ghost Button</Button>
-                <Button variant='destructive'>Destructive</Button>
-              </div>
-
-              <div className='space-x-2'>
-                <Button size='lg'>Large</Button>
-                <Button>Default</Button>
-                <Button size='sm'>Small</Button>
-              </div>
-
-              <div className='space-x-2'>
-                <Button>
-                  <Plus className='mr-2 h-4 w-4' /> With Icon
-                </Button>
-                <Button variant='secondary'>
-                  <Laptop className='mr-2 h-4 w-4' /> With Icon
-                </Button>
-                <Button variant='outline'>
-                  <Phone className='mr-2 h-4 w-4' /> With Icon
-                </Button>
-              </div>
-
-              <div className='space-x-2'>
-                <Button disabled>
-                  <Shield className='mr-2 h-4 w-4' /> Disabled
-                </Button>
-                <Button disabled variant='secondary'>
-                  <CreditCard className='mr-2 h-4 w-4' /> Disabled
-                </Button>
-              </div>
-            </li>
-          </ol>
+            </CardContent>
+          </Card>
         </div>
-      </section>
+      </div>
     </main>
   );
 }
-
-const colorList = [
-  'slate',
-  'gray',
-  'zinc',
-  'neutral',
-  'stone',
-  'red',
-  'orange',
-  'amber',
-  'yellow',
-  'lime',
-  'green',
-  'emerald',
-  'teal',
-  'cyan',
-  'sky',
-  'blue',
-  'indigo',
-  'violet',
-  'purple',
-  'fuchsia',
-  'pink',
-  'rose',
-] as const;
