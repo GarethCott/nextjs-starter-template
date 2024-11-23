@@ -1,6 +1,15 @@
 'use client';
 
-import { CreditCard, Info, Laptop, Phone, Plus, Shield } from 'lucide-react';
+import {
+  CreditCard,
+  Home,
+  Info,
+  Laptop,
+  Phone,
+  Plus,
+  Shield,
+} from 'lucide-react';
+import Link from 'next/link';
 import { useTheme } from 'next-themes';
 import React from 'react';
 
@@ -8,7 +17,17 @@ import { cn } from '@/lib/utils';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
+import {
+  Breadcrumb,
+  BreadcrumbEllipsis,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Card,
   CardContent,
@@ -18,18 +37,33 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from '@/components/ui/input-otp';
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/components/ui/use-toast';
 
 export default function ComponentPage() {
   const { theme, setTheme } = useTheme();
+  const [date, setDate] = React.useState<Date | undefined>(new Date());
+  const [otpValue, setOtpValue] = React.useState('');
 
   return (
     <main className='min-h-screen bg-background text-foreground'>
@@ -45,12 +79,59 @@ export default function ComponentPage() {
             </div>
           </div>
 
+          <Card className='mb-8'>
+            <CardHeader>
+              <CardTitle>Theme Settings</CardTitle>
+              <CardDescription>
+                Customize the appearance of the components.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className='flex gap-2'>
+                <Button
+                  variant='outline'
+                  onClick={() => setTheme('light')}
+                  className={cn(
+                    'border border-input',
+                    theme === 'light' && 'border-primary'
+                  )}
+                >
+                  Light
+                </Button>
+                <Button
+                  variant='outline'
+                  onClick={() => setTheme('dark')}
+                  className={cn(
+                    'border border-input',
+                    theme === 'dark' && 'border-primary'
+                  )}
+                >
+                  Dark
+                </Button>
+                <Button
+                  variant='outline'
+                  onClick={() => setTheme('system')}
+                  className={cn(
+                    'border border-input',
+                    theme === 'system' && 'border-primary'
+                  )}
+                >
+                  System
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
           <Tabs defaultValue='buttons' className='space-y-4'>
             <TabsList>
               <TabsTrigger value='buttons'>Buttons</TabsTrigger>
               <TabsTrigger value='inputs'>Inputs</TabsTrigger>
               <TabsTrigger value='alerts'>Alerts</TabsTrigger>
               <TabsTrigger value='badges'>Badges</TabsTrigger>
+              <TabsTrigger value='calendar'>Calendar</TabsTrigger>
+              <TabsTrigger value='otp'>OTP Input</TabsTrigger>
+              <TabsTrigger value='sheet'>Sheet</TabsTrigger>
+              <TabsTrigger value='breadcrumb'>Breadcrumb</TabsTrigger>
             </TabsList>
 
             <TabsContent value='buttons' className='space-y-4'>
@@ -234,50 +315,135 @@ export default function ComponentPage() {
                 </CardContent>
               </Card>
             </TabsContent>
-          </Tabs>
+            <TabsContent value='calendar' className='space-y-4'>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Calendar</CardTitle>
+                  <CardDescription>
+                    A date picker component with various selection modes.
+                  </CardDescription>
+                </CardHeader>
 
-          <Card className='mt-8'>
-            <CardHeader>
-              <CardTitle>Theme Settings</CardTitle>
-              <CardDescription>
-                Customize the appearance of the components.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className='flex gap-2'>
-                <Button
-                  variant='outline'
-                  onClick={() => setTheme('light')}
-                  className={cn(
-                    'border border-input',
-                    theme === 'light' && 'border-primary'
-                  )}
-                >
-                  Light
-                </Button>
-                <Button
-                  variant='outline'
-                  onClick={() => setTheme('dark')}
-                  className={cn(
-                    'border border-input',
-                    theme === 'dark' && 'border-primary'
-                  )}
-                >
-                  Dark
-                </Button>
-                <Button
-                  variant='outline'
-                  onClick={() => setTheme('system')}
-                  className={cn(
-                    'border border-input',
-                    theme === 'system' && 'border-primary'
-                  )}
-                >
-                  System
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+                <CardContent className='flex justify-center'>
+                  <Calendar
+                    mode='single'
+                    selected={date}
+                    onSelect={setDate}
+                    className='rounded-md border w-[300px]'
+                  />
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value='otp' className='space-y-4'>
+              <Card>
+                <CardHeader>
+                  <CardTitle>OTP Input</CardTitle>
+                  <CardDescription>
+                    A one-time password input component with controlled state.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className='space-y-2'>
+                    <InputOTP
+                      maxLength={6}
+                      value={otpValue}
+                      onChange={(value) => setOtpValue(value)}
+                    >
+                      <InputOTPGroup>
+                        <InputOTPSlot index={0} />
+                        <InputOTPSlot index={1} />
+                        <InputOTPSlot index={2} />
+                        <InputOTPSlot index={3} />
+                        <InputOTPSlot index={4} />
+                        <InputOTPSlot index={5} />
+                      </InputOTPGroup>
+                    </InputOTP>
+                    <div className='text-center text-sm text-muted-foreground'>
+                      {otpValue === '' ? (
+                        <>Enter your one-time password.</>
+                      ) : (
+                        <>You entered: {otpValue}</>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value='sheet' className='space-y-4'>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Sheet</CardTitle>
+                  <CardDescription>
+                    A slide-out panel component that can be triggered from any
+                    side.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className='space-x-4'>
+                  <Sheet>
+                    <SheetTrigger asChild>
+                      <Button variant='outline'>Open Sheet</Button>
+                    </SheetTrigger>
+                    <SheetContent>
+                      <SheetHeader>
+                        <SheetTitle>Sheet Title</SheetTitle>
+                        <SheetDescription>
+                          This is a sheet component that slides out from the
+                          side of the screen.
+                        </SheetDescription>
+                      </SheetHeader>
+                      <div className='py-6'>Sheet content goes here...</div>
+                    </SheetContent>
+                  </Sheet>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value='breadcrumb' className='space-y-4'>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Breadcrumb</CardTitle>
+                  <CardDescription>
+                    A navigation component that helps users keep track of their
+                    location.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className='space-y-4'>
+                  <div className='w-full'>
+                    <Breadcrumb>
+                      <BreadcrumbList>
+                        <BreadcrumbItem>
+                          <BreadcrumbLink asChild>
+                            <Link href='/'>
+                              <div className='flex items-center gap-2'>
+                                <Home className='h-4 w-4' />
+                                Home
+                              </div>
+                            </Link>
+                          </BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                          <BreadcrumbEllipsis />
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                          <BreadcrumbLink asChild>
+                            <Link href='/components'>Components</Link>
+                          </BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                          <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
+                        </BreadcrumbItem>
+                      </BreadcrumbList>
+                    </Breadcrumb>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </main>
