@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   lint:
-    name: ⬣ ESLint, ʦ TypeScript, 💅 Prettier, and 🃏 Test
+    name: ⬣ ESLint, ʦ TypeScript, 💅 Prettier, and 🧪 Test
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
@@ -40,5 +40,16 @@ jobs:
       - name: 💅 Prettier check
         run: pnpm run format:check
 
-      - name: 🃏 Run jest
-        run: pnpm run test
+      - name: 🎭 Install Playwright
+        run: pnpm dlx playwright install --with-deps
+
+      - name: 🧪 Run tests
+        run: pnpm test
+
+      - name: 📊 Upload test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30

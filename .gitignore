@@ -40,3 +40,13 @@ next-env.d.ts
 robots.txt
 sitemap.xml
 sitemap-*.xml
+
+# tests
+/test-results
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
