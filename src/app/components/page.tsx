@@ -1,5 +1,6 @@
 'use client';
 
+import { ColumnDef } from '@tanstack/react-table';
 import {
   CreditCard,
   Home,
@@ -35,6 +36,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { DataTable } from '@/components/ui/data-table/data-table';
 import { Input } from '@/components/ui/input';
 import {
   InputOTP,
@@ -65,10 +67,55 @@ export default function ComponentPage() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [otpValue, setOtpValue] = React.useState('');
 
+  // Define the Payment type
+  type Payment = {
+    id: string;
+    amount: number;
+    status: 'pending' | 'processing' | 'success' | 'failed';
+    email: string;
+  };
+
+  // Mock data for the table demo
+  const data: Payment[] = Array.from({ length: 5 }, (_, i) => ({
+    id: `INV-${(i + 1).toString().padStart(4, '0')}`,
+    amount: Math.floor(Math.random() * 10000),
+    status: ['pending', 'processing', 'success', 'failed'][
+      Math.floor(Math.random() * 4)
+    ] as Payment['status'],
+    email: `user${i + 1}@example.com`,
+  }));
+
+  const columns: ColumnDef<Payment>[] = [
+    {
+      accessorKey: 'id',
+      header: 'Invoice ID',
+    },
+    {
+      accessorKey: 'status',
+      header: 'Status',
+    },
+    {
+      accessorKey: 'email',
+      header: 'Email',
+    },
+    {
+      accessorKey: 'amount',
+      header: 'Amount',
+      cell: ({ row }) => {
+        const amount = parseFloat(row.getValue('amount'));
+        const formatted = new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+        }).format(amount);
+        return <div className='text-right font-medium'>{formatted}</div>;
+      },
+    },
+  ];
+
   return (
     <main className='min-h-screen bg-background text-foreground'>
       <div className='container mx-auto py-10'>
-        <div className='max-w-4xl mx-auto'>
+        <div className=' mx-auto'>
           <div className='flex justify-between items-center mb-8'>
             <div>
               <h1 className='text-4xl font-bold'>Shadcn UI Components</h1>
@@ -123,7 +170,7 @@ export default function ComponentPage() {
           </Card>
 
           <Tabs defaultValue='buttons' className='space-y-4'>
-            <TabsList>
+            <TabsList className='grid w-full grid-cols-4 lg:grid-cols-9'>
               <TabsTrigger value='buttons'>Buttons</TabsTrigger>
               <TabsTrigger value='inputs'>Inputs</TabsTrigger>
               <TabsTrigger value='alerts'>Alerts</TabsTrigger>
@@ -131,6 +178,7 @@ export default function ComponentPage() {
               <TabsTrigger value='calendar'>Calendar</TabsTrigger>
               <TabsTrigger value='otp'>OTP Input</TabsTrigger>
               <TabsTrigger value='sheet'>Sheet</TabsTrigger>
+              <TabsTrigger value='table'>Table</TabsTrigger>
               <TabsTrigger value='breadcrumb'>Breadcrumb</TabsTrigger>
             </TabsList>
 
@@ -398,6 +446,27 @@ export default function ComponentPage() {
                   </Sheet>
                 </CardContent>
               </Card>
+            </TabsContent>
+
+            <TabsContent value='table' className='space-y-4'>
+              <div className='grid gap-4'>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Data Table</CardTitle>
+                    <CardDescription>
+                      A fully featured data table with sorting, filtering, and
+                      pagination.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <DataTable
+                      columns={columns}
+                      data={data}
+                      searchKey='email'
+                    />
+                  </CardContent>
+                </Card>
+              </div>
             </TabsContent>
 
             <TabsContent value='breadcrumb' className='space-y-4'>
