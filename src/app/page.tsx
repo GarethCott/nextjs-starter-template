@@ -24,7 +24,7 @@ export default function HomePage() {
   return (
     <main>
       <Head>
-        <title>Hi</title>
+        <title>Hi</title>z
       </Head>
       <section>
         <div className='layout relative flex min-h-screen flex-col items-center justify-center py-12 text-center'>

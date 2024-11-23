@@ -6,6 +6,7 @@ import '@/styles/globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 
 import { siteConfig } from '@/constant/config';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 // !STARTERCONF Change these default meta
 // !STARTERCONF Look at @/constant/config to change them
@@ -63,7 +64,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <AuthProvider>{children}</AuthProvider>
         </ThemeProvider>
       </body>
     </html>
