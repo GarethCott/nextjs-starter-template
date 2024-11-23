@@ -56,7 +56,7 @@ export default function SignUpPage() {
     try {
       await signUp(values.email, values.password);
       router.push(
-        '/sign-in?message=Please check your email to verify your account'
+        '/sign-in?message=Please check your email to verify your account',
       );
     } catch (error: unknown) {
       // eslint-disable-next-line no-console

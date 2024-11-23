@@ -140,7 +140,7 @@ export default function ComponentPage() {
                   onClick={() => setTheme('light')}
                   className={cn(
                     'border border-input',
-                    theme === 'light' && 'border-primary'
+                    theme === 'light' && 'border-primary',
                   )}
                 >
                   Light
@@ -150,7 +150,7 @@ export default function ComponentPage() {
                   onClick={() => setTheme('dark')}
                   className={cn(
                     'border border-input',
-                    theme === 'dark' && 'border-primary'
+                    theme === 'dark' && 'border-primary',
                   )}
                 >
                   Dark
@@ -160,7 +160,7 @@ export default function ComponentPage() {
                   onClick={() => setTheme('system')}
                   className={cn(
                     'border border-input',
-                    theme === 'system' && 'border-primary'
+                    theme === 'system' && 'border-primary',
                   )}
                 >
                   System
