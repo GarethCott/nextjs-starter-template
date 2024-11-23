@@ -4,6 +4,8 @@ import { CreditCard, Info, Laptop, Phone, Plus, Shield } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import React from 'react';
 
+import { cn } from '@/lib/utils';
+
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -24,6 +26,7 @@ import {
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
+import { toast } from '@/components/ui/use-toast';
 
 export default function ComponentPage() {
   const { theme, setTheme } = useTheme();
@@ -152,6 +155,65 @@ export default function ComponentPage() {
                   </Alert>
                 </CardContent>
               </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Toast Notifications</CardTitle>
+                  <CardDescription>
+                    Different types of toast notifications
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className='grid gap-4'>
+                  <div className='grid gap-2 w-12'>
+                    <Button
+                      variant='default'
+                      onClick={() => {
+                        toast({
+                          title: 'Default Toast',
+                          description: 'This is a default toast notification',
+                        });
+                      }}
+                    >
+                      Show Default Toast
+                    </Button>
+                    <Button
+                      variant='destructive'
+                      onClick={() => {
+                        toast({
+                          variant: 'destructive',
+                          title: 'Error Toast',
+                          description: 'Something went wrong!',
+                        });
+                      }}
+                    >
+                      Show Error Toast
+                    </Button>
+                    <Button
+                      variant='outline'
+                      onClick={() => {
+                        toast({
+                          title: 'With Action',
+                          description: 'Toast with an action button',
+                          action: (
+                            <Button
+                              variant='outline'
+                              size='sm'
+                              onClick={() => {
+                                toast({
+                                  description: 'Action clicked!',
+                                });
+                              }}
+                            >
+                              Undo
+                            </Button>
+                          ),
+                        });
+                      }}
+                    >
+                      Toast with Action
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             </TabsContent>
 
             <TabsContent value='badges' className='space-y-4'>
@@ -186,21 +248,30 @@ export default function ComponentPage() {
                 <Button
                   variant='outline'
                   onClick={() => setTheme('light')}
-                  className={theme === 'light' ? 'border-primary' : ''}
+                  className={cn(
+                    'border border-input',
+                    theme === 'light' && 'border-primary'
+                  )}
                 >
                   Light
                 </Button>
                 <Button
                   variant='outline'
                   onClick={() => setTheme('dark')}
-                  className={theme === 'dark' ? 'border-primary' : ''}
+                  className={cn(
+                    'border border-input',
+                    theme === 'dark' && 'border-primary'
+                  )}
                 >
                   Dark
                 </Button>
                 <Button
                   variant='outline'
                   onClick={() => setTheme('system')}
-                  className={theme === 'system' ? 'border-primary' : ''}
+                  className={cn(
+                    'border border-input',
+                    theme === 'system' && 'border-primary'
+                  )}
                 >
                   System
                 </Button>
