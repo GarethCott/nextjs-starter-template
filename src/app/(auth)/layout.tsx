@@ -1,9 +1,8 @@
 import { Metadata } from 'next';
+import Image from 'next/image';
 import * as React from 'react';
 
 import '@/styles/globals.css';
-
-import NextImage from '@/components/NextImage';
 
 import { siteConfig } from '@/constant/config';
 
@@ -26,7 +25,7 @@ export default function AuthLayout({
         <div className='relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex'>
           <div className='absolute inset-0 bg-zinc-900/90' />
           <div className='relative z-20 flex items-center text-lg font-medium'>
-            <NextImage
+            <Image
               src='/images/logo.svg'
               alt='Logo'
               className='mr-2'

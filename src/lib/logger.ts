@@ -1,12 +1,13 @@
 /* eslint-disable no-console */
 import { showLogger } from '@/constant/env';
 
-type LogType = 'info' | 'error' | 'success';
+type LogType = 'info' | 'error' | 'success' | 'warn';
 
 const LOG_COLORS = {
   info: '#22D3EE', // cyan
   error: '#EF4444', // red
   success: '#10B981', // green
+  warn: '#F59E0B', // amber
 } as const;
 
 /**
@@ -34,10 +35,14 @@ function baseLogger(
 const logger = {
   log: (message: string, details?: unknown) =>
     baseLogger(message, details, 'info'),
+  info: (message: string, details?: unknown) =>
+    baseLogger(message, details, 'info'),
   error: (message: string, error?: unknown) =>
     baseLogger(message, error, 'error'),
   success: (message: string, details?: unknown) =>
     baseLogger(message, details, 'success'),
+  warn: (message: string, details?: unknown) =>
+    baseLogger(message, details, 'warn'),
 };
 
 export default logger;

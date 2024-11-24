@@ -141,6 +141,67 @@ The template includes a built-in theme system with light and dark mode support:
 - Manual theme switching
 - Persistent theme selection
 
+#### GraphQL Integration
+
+- 🚀 Apollo Client Setup
+  - Server-side Operations
+  - Client-side Operations
+  - Automatic Auth Token Handling
+  - Role-based Access Control
+
+#### GraphQL Client Architecture
+
+The project uses a dual-client architecture for GraphQL operations:
+
+1. **Server-side Client** (`lib/apollo/server-graphql-client.ts`)
+
+   - Used in server components and server actions
+   - Automatically includes auth tokens from middleware
+   - Handles secure mutations and queries
+   - Example usage:
+
+   ```typescript
+   import { serverClient } from '@/lib/apollo/server-graphql-client';
+
+   export async function serverAction() {
+     const result = await serverClient.query({
+       query: YOUR_QUERY,
+       variables: { ... }
+     });
+   }
+   ```
+
+2. **Client-side Client** (`lib/graphql-client.ts`)
+
+   - Used in React components with Apollo hooks
+   - Fetches auth tokens via secure API endpoint
+   - Supports real-time updates and caching
+   - Example usage:
+
+   ```typescript
+   import { useQuery } from '@apollo/client';
+
+   export function Component() {
+     const { data, loading } = useQuery(YOUR_QUERY);
+   }
+   ```
+
+#### Authentication Flow
+
+1. Middleware validates requests and sets auth headers
+2. Server-side: Headers are directly accessed
+3. Client-side: Auth tokens fetched via `/api/auth/token`
+4. GraphQL requests include proper Hasura headers
+
+#### Environment Setup
+
+Required environment variables for Hasura:
+
+```env
+NEXT_PUBLIC_HASURA_GRAPHQL_URL=your-hasura-endpoint
+NEXT_PUBLIC_HASURA_ADMIN_SECRET=your-hasura-admin-secret
+```
+
 ## 🎯 Roadmap
 
 - [ ] Add Form Validation Examples

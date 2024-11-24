@@ -13,6 +13,8 @@ import {
 } from 'aws-amplify/auth';
 import { createContext, useContext, useEffect, useState } from 'react';
 
+import logger from '@/lib/logger';
+
 import { amplifyConfig } from '@/utils/amplify-config';
 
 // Configure Amplify
@@ -27,7 +29,11 @@ interface AuthContextType {
   signUp: (email: string, password: string) => Promise<any>;
   signOut: () => Promise<void>;
   forgotPassword: (email: string) => Promise<any>;
-  resetPassword: (code: string, newPassword: string) => Promise<any>;
+  resetPassword: (
+    email: string,
+    code: string,
+    newPassword: string,
+  ) => Promise<any>;
   confirmSignUp: (email: string, code: string) => Promise<any>;
 }
 
@@ -47,27 +53,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(currentUser);
     } catch (error) {
       setUser(null);
+      logger.error('Error checking user:', error);
     } finally {
       setLoading(false);
     }
   }
 
-  const handleSignIn = async (email: string, password: string) => {
-    const { isSignedIn, nextStep } = await signIn({
-      username: email,
-      password,
-    });
+  async function handleSignIn(email: string, password: string) {
+    const result = await signIn({ username: email, password });
+    await checkUser();
+    return result;
+  }
 
-    if (isSignedIn) {
-      const currentUser = await getCurrentUser();
-      setUser(currentUser);
-      return currentUser;
-    }
-
-    return nextStep;
-  };
-
-  const handleSignUp = async (email: string, password: string) => {
+  async function handleSignUp(email: string, password: string) {
     return signUp({
       username: email,
       password,
@@ -77,31 +75,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         },
       },
     });
-  };
+  }
 
-  const handleSignOut = async () => {
-    await signOut();
-    setUser(null);
-  };
+  async function handleSignOut() {
+    try {
+      await signOut();
+      setUser(null);
+    } catch (error) {
+      logger.error('Error signing out:', error);
+      throw error;
+    }
+  }
 
-  const handleForgotPassword = async (email: string) => {
+  async function handleForgotPassword(email: string) {
     return resetPassword({ username: email });
-  };
+  }
 
-  const handleResetPassword = async (code: string, newPassword: string) => {
+  async function handleResetPassword(
+    email: string,
+    code: string,
+    newPassword: string,
+  ) {
     return confirmResetPassword({
-      username: user?.username || '',
+      username: email,
       confirmationCode: code,
       newPassword,
     });
-  };
+  }
 
-  const handleConfirmSignUp = async (email: string, code: string) => {
-    return confirmSignUp({
-      username: email,
-      confirmationCode: code,
-    });
-  };
+  async function handleConfirmSignUp(email: string, code: string) {
+    return confirmSignUp({ username: email, confirmationCode: code });
+  }
 
   const value = {
     user,
