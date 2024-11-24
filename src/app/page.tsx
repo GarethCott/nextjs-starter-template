@@ -16,8 +16,6 @@ import {
 import { DataTable } from '@/components/ui/data-table/data-table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-import Logo from '~/svg/Logo.svg';
-
 type Payment = {
   id: string;
   amount: number;
@@ -26,15 +24,20 @@ type Payment = {
 };
 
 export default function HomePage() {
-  // Mock data for the table demo
-  const data: Payment[] = Array.from({ length: 5 }, (_, i) => ({
-    id: `INV-${(i + 1).toString().padStart(4, '0')}`,
-    amount: Math.floor(Math.random() * 10000),
-    status: ['pending', 'processing', 'success', 'failed'][
-      Math.floor(Math.random() * 4)
-    ] as Payment['status'],
-    email: `user${i + 1}@example.com`,
-  }));
+  const [data, setData] = React.useState<Payment[]>([]);
+
+  React.useEffect(() => {
+    // Generate mock data after component mounts
+    const mockData = Array.from({ length: 5 }, (_, i) => ({
+      id: `INV-${(i + 1).toString().padStart(4, '0')}`,
+      amount: Math.floor(Math.random() * 10000),
+      status: ['pending', 'processing', 'success', 'failed'][
+        Math.floor(Math.random() * 4)
+      ] as Payment['status'],
+      email: `user${i + 1}@example.com`,
+    }));
+    setData(mockData);
+  }, []);
 
   const columns: ColumnDef<Payment>[] = [
     {
@@ -77,7 +80,6 @@ export default function HomePage() {
     <main className='min-h-screen bg-background'>
       <div className='container mx-auto py-10'>
         <div className='flex flex-col items-center justify-center text-center mb-12'>
-          <Logo className='w-16' />
           <h1 className='mt-4 text-4xl font-bold'>Next.js Starter Template</h1>
           <p className='mt-2 text-lg text-muted-foreground max-w-2xl'>
             A modern starter template with Next.js 14, Tailwind CSS, TypeScript,
@@ -149,13 +151,13 @@ export default function HomePage() {
                     <CardContent>
                       <div className='flex justify-center gap-4'>
                         <Link
-                          href='/auth/login'
+                          href='/sign-in'
                           className={buttonVariants({ variant: 'outline' })}
                         >
                           Sign In
                         </Link>
                         <Link
-                          href='/auth/register'
+                          href='/sign-up'
                           className={buttonVariants({ variant: 'default' })}
                         >
                           Sign Up
