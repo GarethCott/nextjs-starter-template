@@ -1,0 +1,33 @@
+name: Update Dependencies
+on:
+  schedule:
+    - cron: '0 0 * * 1' # Every Monday
+  workflow_dispatch:
+
+jobs:
+  update-deps:
+    name: 🔄 Update Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Update dependencies
+        run: pnpm update
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          title: '⬆️ Update dependencies'
+          branch: 'chore/update-dependencies'
+          commit-message: 'chore: update dependencies'
+          body: 'Updated dependencies to their latest versions'
