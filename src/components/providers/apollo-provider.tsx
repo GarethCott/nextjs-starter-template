@@ -1,26 +1,24 @@
 'use client';
 
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
-import { useState } from 'react';
+import { ApolloProvider } from '@apollo/client';
+import { useEffect, useState } from 'react';
+
+import { createApolloClient } from '@/lib/apollo/graphql-client';
 
 import { useAuth } from '@/contexts/AuthContext';
 
 export function ApolloWrapper({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
-  const [client] = useState(
-    () =>
-      new ApolloClient({
-        uri: process.env.NEXT_PUBLIC_HASURA_GRAPHQL_URL,
-        cache: new InMemoryCache(),
-        headers: {
-          'x-hasura-admin-secret':
-            process.env.NEXT_PUBLIC_HASURA_ADMIN_SECRET || '',
-          ...(user && {
-            Authorization: `Bearer ${user.signInUserSession.accessToken.jwtToken}`,
-          }),
-        },
-      }),
-  );
+  const [client, setClient] = useState(createApolloClient());
+
+  useEffect(() => {
+    if (user) {
+      const token = user.signInUserSession.accessToken.jwtToken;
+      setClient(createApolloClient(token));
+    } else {
+      setClient(createApolloClient());
+    }
+  }, [user]);
 
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
 }
