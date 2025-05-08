@@ -100,6 +100,12 @@ export default function HomePage() {
             >
               Documentation
             </Link>
+            <Link
+              className={buttonVariants({ variant: 'secondary', size: 'lg' })}
+              href='/counter-demo'
+            >
+              Context Demo
+            </Link>
           </div>
         </div>
 
